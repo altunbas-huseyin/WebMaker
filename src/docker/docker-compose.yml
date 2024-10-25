@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: abp-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=yourStrong(!)Password
+      # Opsiyonel: Varsayılan UTF8 karakter seti kullanımı için
+      - MSSQL_COLLATION=Turkish_CI_AS
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - abp-network
+    restart: unless-stopped
+
+networks:
+  abp-network:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+    driver: local
