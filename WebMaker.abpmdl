@@ -1,0 +1,85 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.Account": {
+      "version": "8.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "8.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "8.3.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.TenantManagement": {
+      "version": "8.3.2",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "WebMaker.Application": {
+      "path": "src/WebMaker.Application/WebMaker.Application.abppkg",
+      "folder": "src"
+    },
+    "WebMaker.Application.Tests": {
+      "path": "test/WebMaker.Application.Tests/WebMaker.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "WebMaker.Domain.Shared": {
+      "path": "src/WebMaker.Domain.Shared/WebMaker.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "WebMaker.Application.Contracts": {
+      "path": "src/WebMaker.Application.Contracts/WebMaker.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "WebMaker.HttpApi": {
+      "path": "src/WebMaker.HttpApi/WebMaker.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "WebMaker.HttpApi.Client": {
+      "path": "src/WebMaker.HttpApi.Client/WebMaker.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "WebMaker.EntityFrameworkCore.Tests": {
+      "path": "test/WebMaker.EntityFrameworkCore.Tests/WebMaker.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "WebMaker.EntityFrameworkCore": {
+      "path": "src/WebMaker.EntityFrameworkCore/WebMaker.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "WebMaker.TestBase": {
+      "path": "test/WebMaker.TestBase/WebMaker.TestBase.abppkg",
+      "folder": "test"
+    },
+    "WebMaker.Domain.Tests": {
+      "path": "test/WebMaker.Domain.Tests/WebMaker.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "WebMaker.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/WebMaker.HttpApi.Client.ConsoleTestApp/WebMaker.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "WebMaker.DbMigrator": {
+      "path": "src/WebMaker.DbMigrator/WebMaker.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "WebMaker.HttpApi.Host": {
+      "path": "src/WebMaker.HttpApi.Host/WebMaker.HttpApi.Host.abppkg",
+      "folder": "src"
+    },
+    "WebMaker.Domain": {
+      "path": "src/WebMaker.Domain/WebMaker.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
