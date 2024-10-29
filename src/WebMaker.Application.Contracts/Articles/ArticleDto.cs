@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace WebMaker.Articles
@@ -10,6 +11,17 @@ namespace WebMaker.Articles
         public string Summary { get; set; }
         public bool IsPublished { get; set; }
         public DateTime? PublishDate { get; set; }
-       public ArticleType type { get; set; }
+        public ArticleType Type { get; set; }
+
+        // SEO Properties
+        public string SeoTitle { get; set; }
+        public string SeoDescription { get; set; }
+        public string SeoKeywords { get; set; }
+        public string SeoSlug { get; set; }
+
+        // Categories
+        public List<Guid> CategoryIds { get; set; }
+
+
     }
 }

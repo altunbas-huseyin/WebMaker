@@ -22,7 +22,25 @@ namespace WebMaker.Articles
         public string Summary { get; set; }
 
         [Required]
-        public ArticleType type { get; set; }
+        public ArticleType Type { get; set; }
+
+        // SEO Properties
+        [Required]
+        [StringLength(ArticleConsts.MaxSeoTitleLength)]
+        public string SeoTitle { get; set; }
+
+        [StringLength(ArticleConsts.MaxSeoDescriptionLength)]
+        public string SeoDescription { get; set; }
+
+        [StringLength(ArticleConsts.MaxSeoKeywordsLength)]
+        public string SeoKeywords { get; set; }
+
+        [Required]
+        [StringLength(ArticleConsts.MaxSeoSlugLength)]
+        public string SeoSlug { get; set; }
+
+        // Categories
+        public List<Guid> CategoryIds { get; set; }
 
     }
 }

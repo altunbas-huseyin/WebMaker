@@ -10,13 +10,12 @@ namespace WebMaker.Entities.Articles
 {
     public class Article : AuditedAggregateRoot<Guid>
     {
+        #region Properties
         public string Title { get; private set; }
         public string Content { get; private set; }
         public string Summary { get; private set; }
         public bool IsPublished { get; private set; }
         public DateTime? PublishDate { get; private set; }
-
-        // Article Type
         public ArticleType Type { get; private set; }
 
         // SEO Properties
@@ -27,7 +26,9 @@ namespace WebMaker.Entities.Articles
 
         // Categories
         public virtual ICollection<ArticleCategory> Categories { get; private set; }
+        #endregion
 
+        #region Constructors
         protected Article()
         {
             Categories = new HashSet<ArticleCategory>();
@@ -38,17 +39,24 @@ namespace WebMaker.Entities.Articles
             string title,
             string content,
             string summary,
-            ArticleType type)
-            : base(id)
+            ArticleType type,
+            string seoTitle,
+            string seoSlug) : base(id)
         {
             SetTitle(title);
             SetContent(content);
             SetSummary(summary);
             SetType(type);
+
+            // Set required SEO properties
+            SetBasicSeoData(seoTitle, seoSlug);
+
             IsPublished = false;
             Categories = new HashSet<ArticleCategory>();
         }
+        #endregion
 
+        #region Public Methods
         public void SetTitle(string title)
         {
             Title = Check.NotNullOrWhiteSpace(
@@ -56,6 +64,12 @@ namespace WebMaker.Entities.Articles
                 nameof(title),
                 maxLength: ArticleConsts.MaxTitleLength
             );
+
+            // Update SEO title if not explicitly set
+            if (string.IsNullOrWhiteSpace(SeoTitle))
+            {
+                SeoTitle = Title;
+            }
         }
 
         public void SetContent(string content)
@@ -74,6 +88,12 @@ namespace WebMaker.Entities.Articles
                 nameof(summary),
                 maxLength: ArticleConsts.MaxSummaryLength
             );
+
+            // Update SEO description if not explicitly set
+            if (string.IsNullOrWhiteSpace(SeoDescription))
+            {
+                SeoDescription = Summary;
+            }
         }
 
         public void SetType(ArticleType type)
@@ -81,17 +101,28 @@ namespace WebMaker.Entities.Articles
             Type = type;
         }
 
-        public void SetSeoData(
-            string seoTitle,
-            string seoDescription,
-            string seoKeywords,
-            string seoSlug)
+        public void SetBasicSeoData(string seoTitle, string seoSlug)
         {
             SeoTitle = Check.NotNullOrWhiteSpace(
                 seoTitle,
                 nameof(seoTitle),
                 maxLength: ArticleConsts.MaxSeoTitleLength
             );
+
+            SeoSlug = Check.NotNullOrWhiteSpace(
+                seoSlug,
+                nameof(seoSlug),
+                maxLength: ArticleConsts.MaxSeoSlugLength
+            );
+        }
+
+        public void SetFullSeoData(
+            string seoTitle,
+            string seoDescription,
+            string seoKeywords,
+            string seoSlug)
+        {
+            SetBasicSeoData(seoTitle, seoSlug);
 
             SeoDescription = Check.Length(
                 seoDescription,
@@ -104,16 +135,12 @@ namespace WebMaker.Entities.Articles
                 nameof(seoKeywords),
                 maxLength: ArticleConsts.MaxSeoKeywordsLength
             );
-
-            SeoSlug = Check.NotNullOrWhiteSpace(
-                seoSlug,
-                nameof(seoSlug),
-                maxLength: ArticleConsts.MaxSeoSlugLength
-            );
         }
 
         public void AddCategory(Guid categoryId)
         {
+            Check.NotNull(categoryId, nameof(categoryId));
+
             if (Categories.Any(x => x.CategoryId == categoryId))
             {
                 return;
@@ -124,12 +151,27 @@ namespace WebMaker.Entities.Articles
 
         public void RemoveCategory(Guid categoryId)
         {
+            Check.NotNull(categoryId, nameof(categoryId));
             Categories.RemoveAll(x => x.CategoryId == categoryId);
         }
 
         public void ClearCategories()
         {
             Categories.Clear();
+        }
+
+        public void UpdateCategories(IEnumerable<Guid> categoryIds)
+        {
+            Check.NotNull(categoryIds, nameof(categoryIds));
+
+            // Remove categories that are not in the new list
+            Categories.RemoveAll(x => !categoryIds.Contains(x.CategoryId));
+
+            // Add new categories
+            foreach (var categoryId in categoryIds)
+            {
+                AddCategory(categoryId);
+            }
         }
 
         public void Publish()
@@ -139,6 +181,7 @@ namespace WebMaker.Entities.Articles
                 return;
             }
 
+            ValidateBeforePublish();
             IsPublished = true;
             PublishDate = DateTime.Now;
         }
@@ -153,21 +196,24 @@ namespace WebMaker.Entities.Articles
             IsPublished = false;
             PublishDate = null;
         }
+        #endregion
 
-        public void UpdateCategories(IEnumerable<Guid> categoryIds)
+        #region Private Methods
+        private void ValidateBeforePublish()
         {
-            Check.NotNull(categoryIds, nameof(categoryIds));
+            if (string.IsNullOrWhiteSpace(Title))
+                throw new BusinessException("Article:TitleRequired");
 
-            // Remove old categories that are not in the new list
-            Categories.RemoveAll(x => !categoryIds.Contains(x.CategoryId));
+            if (string.IsNullOrWhiteSpace(Content))
+                throw new BusinessException("Article:ContentRequired");
 
-            // Add new categories
-            foreach (var categoryId in categoryIds)
-            {
-                AddCategory(categoryId);
-            }
+            if (string.IsNullOrWhiteSpace(Summary))
+                throw new BusinessException("Article:SummaryRequired");
+
+            if (string.IsNullOrWhiteSpace(SeoTitle) || string.IsNullOrWhiteSpace(SeoSlug))
+                throw new BusinessException("Article:BasicSeoDataRequired");
         }
+        #endregion
     }
-
 
 }
