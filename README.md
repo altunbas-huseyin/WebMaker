@@ -56,3 +56,11 @@ You can see the following resources to learn more about your solution and the AB
 
 * [Web Application Development Tutorial](https://abp.io/docs/latest/tutorials/book-store/part-1)
 * [Application Startup Template](https://abp.io/docs/latest/startup-templates/application/index)
+
+
+### Genel İşleyiş
+WebMaker.Domain altında model oluştur.
+WebMaker.Domain.Shared altında statik tipleri oluştur.
+WebMaker.Application.Contracts altında DTO ları oluştur.
+WebMaker.EntityFrameworkCore altında tanımlamaları yap.
+WebMaker.Application altında servis oluştur.
