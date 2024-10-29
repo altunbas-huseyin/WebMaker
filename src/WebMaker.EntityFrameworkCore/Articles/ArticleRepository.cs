@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using WebMaker.Entities.Articles;
 using WebMaker.EntityFrameworkCore;
+using System.Linq;
 
 namespace WebMaker.Articles
 {
@@ -42,7 +44,7 @@ namespace WebMaker.Articles
 
             if (includeCategories)
             {
-                query = query.Include(x => x.Categories);
+                query = (IOrderedQueryable<Article>)query.Include(x => x.Categories);
             }
 
             return await query
