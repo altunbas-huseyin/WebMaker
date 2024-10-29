@@ -14,6 +14,9 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using WebMaker.Entities.Articles;
+using WebMaker.Categories;
+using WebMaker.Articles;
 
 namespace WebMaker.EntityFrameworkCore;
 
@@ -55,6 +58,10 @@ public class WebMakerDbContext :
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
+    public DbSet<Article> Articles { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<ArticleCategory> ArticleCategories { get; set; }
+
     #endregion
 
     public WebMakerDbContext(DbContextOptions<WebMakerDbContext> options)
@@ -78,7 +85,7 @@ public class WebMakerDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureTenantManagement();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
 
         //builder.Entity<YourEntity>(b =>
@@ -87,5 +94,104 @@ public class WebMakerDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+
+        builder.Entity<Article>(b =>
+        {
+            b.ToTable(WebMakerConsts.DbTablePrefix + "Articles", WebMakerConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Title)
+                .IsRequired()
+                .HasMaxLength(ArticleConsts.MaxTitleLength);
+
+            b.Property(x => x.Content)
+                .IsRequired()
+                .HasMaxLength(ArticleConsts.MaxContentLength);
+
+            b.Property(x => x.Summary)
+                .IsRequired()
+                .HasMaxLength(ArticleConsts.MaxSummaryLength);
+
+            b.Property(x => x.SeoTitle)
+                .HasMaxLength(ArticleConsts.MaxSeoTitleLength);
+
+            b.Property(x => x.SeoDescription)
+                .HasMaxLength(ArticleConsts.MaxSeoDescriptionLength);
+
+            b.Property(x => x.SeoKeywords)
+                .HasMaxLength(ArticleConsts.MaxSeoKeywordsLength);
+
+            b.Property(x => x.SeoSlug)
+                .HasMaxLength(ArticleConsts.MaxSeoSlugLength);
+
+            // Index on SeoSlug
+            b.HasIndex(x => x.SeoSlug);
+        });
+
+        builder.Entity<Category>(b =>
+        {
+            b.ToTable(WebMakerConsts.DbTablePrefix + "Categories", WebMakerConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(CategoryConsts.MaxNameLength);
+
+            b.Property(x => x.Description)
+                .HasMaxLength(CategoryConsts.MaxDescriptionLength);
+
+            b.Property(x => x.SeoTitle)
+                .HasMaxLength(CategoryConsts.MaxSeoTitleLength);
+
+            b.Property(x => x.SeoDescription)
+                .HasMaxLength(CategoryConsts.MaxSeoDescriptionLength);
+
+            b.Property(x => x.SeoKeywords)
+                .HasMaxLength(CategoryConsts.MaxSeoKeywordsLength);
+
+            b.Property(x => x.SeoSlug)
+                .HasMaxLength(CategoryConsts.MaxSeoSlugLength);
+
+            // Self-referencing relationship for hierarchical categories
+            b.HasOne(x => x.ParentCategory)
+                .WithMany(x => x.SubCategories)
+                .HasForeignKey(x => x.ParentCategoryId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Index on ParentCategoryId and SeoSlug
+            b.HasIndex(x => x.ParentCategoryId);
+            b.HasIndex(x => x.SeoSlug);
+        });
+
+        builder.Entity<ArticleCategory>(b =>
+        {
+            b.ToTable(WebMakerConsts.DbTablePrefix + "ArticleCategories", WebMakerConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            // Composite primary key
+            b.HasKey(x => new { x.ArticleId, x.CategoryId });
+
+            // Relationships
+            b.HasOne(x => x.Article)
+                .WithMany(x => x.Categories)
+                .HasForeignKey(x => x.ArticleId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasOne(x => x.Category)
+                .WithMany(x => x.Articles)
+                .HasForeignKey(x => x.CategoryId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Indexes
+            b.HasIndex(x => x.ArticleId);
+            b.HasIndex(x => x.CategoryId);
+        });
     }
 }
