@@ -8,6 +8,11 @@ export interface ArticleDto extends AuditedEntityDto<string> {
   isPublished: boolean;
   publishDate?: string;
   type: ArticleType;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
+  seoSlug?: string;
+  categoryIds: string[];
 }
 
 export interface CreateArticleDto {
@@ -15,10 +20,21 @@ export interface CreateArticleDto {
   content: string;
   summary: string;
   type: ArticleType;
+  seoTitle: string;
+  seoDescription?: string;
+  seoKeywords?: string;
+  seoSlug: string;
+  categoryIds: string[];
 }
 
 export interface UpdateArticleDto {
   title: string;
   content: string;
   summary: string;
+  type: ArticleType;
+  seoTitle: string;
+  seoDescription?: string;
+  seoKeywords?: string;
+  seoSlug: string;
+  categoryIds: string[];
 }
