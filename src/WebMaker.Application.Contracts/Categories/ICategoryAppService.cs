@@ -6,14 +6,8 @@ using Volo.Abp.Application.Services;
 
 namespace WebMaker.Categories
 {
-    public interface ICategoryAppService : IApplicationService, ICrudAppService<
-        CategoryDto,
-        Guid,
-        PagedAndSortedResultRequestDto,
-        CreateUpdateCategoryDto>
+    public interface ICategoryAppService : IApplicationService
     {
-        Task<List<CategoryDto>> GetAllWithChildrenAsync();
-        Task<CategoryDto> GetWithChildrenAsync(Guid id);
-        Task<List<CategoryDto>> GetChildrenAsync(Guid? parentId);
+
     }
 }
