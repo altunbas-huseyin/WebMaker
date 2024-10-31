@@ -6,6 +6,9 @@ namespace WebMaker.Categories
     public class CreateUpdateCategoryDto
     {
         [Required]
+        public Guid ParentId { get; set; }
+
+        [Required]
         [StringLength(CategoryConsts.MaxNameLength)]
         public string Name { get; set; }
 

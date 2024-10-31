@@ -7,7 +7,8 @@ namespace WebMaker.Categories
 {
     public class Category : AuditedAggregateRoot<Guid>
     {
-        public string Name { get; private set; }
+        public Guid ParentId { get;  set; }
+        public string Name { get;  set; }
         public string Description { get; set; }
 
         // Hierarchical structure
@@ -21,7 +22,7 @@ namespace WebMaker.Categories
         public string SeoKeywords { get; set; }
         public string SeoSlug { get; set; }
 
-        public virtual ICollection<ArticleCategory> Articles { get; private set; }
+        public virtual ICollection<ArticleCategory> Articles { get;  set; }
 
         protected Category()
         {

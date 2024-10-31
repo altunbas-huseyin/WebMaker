@@ -6,6 +6,7 @@ namespace WebMaker.Categories
 {
     public class CategoryDto : AuditedEntityDto<Guid>
     {
+        public Guid ParentId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Guid? ParentCategoryId { get; set; }
