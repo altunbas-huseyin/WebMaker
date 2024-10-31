@@ -1,4 +1,5 @@
-﻿using Volo.Abp.PermissionManagement;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.Account;
 using Volo.Abp.Identity;
@@ -6,6 +7,7 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
+using WebMaker.Categories;
 
 namespace WebMaker;
 
@@ -27,5 +29,8 @@ public class WebMakerApplicationModule : AbpModule
         {
             options.AddMaps<WebMakerApplicationModule>();
         });
+        
+        context.Services.AddTransient<ICategoryAppService, CategoryAppService>();
+
     }
 }

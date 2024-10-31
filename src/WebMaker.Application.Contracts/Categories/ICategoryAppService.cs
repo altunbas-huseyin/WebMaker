@@ -6,7 +6,7 @@ using Volo.Abp.Application.Services;
 
 namespace WebMaker.Categories
 {
-    public interface ICategoryAppService : ICrudAppService<
+    public interface ICategoryAppService : IApplicationService, ICrudAppService<
         CategoryDto,
         Guid,
         PagedAndSortedResultRequestDto,

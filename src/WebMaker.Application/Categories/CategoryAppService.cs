@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using WebMaker.Entities.Categories;
 
 namespace WebMaker.Categories
 {
-    public class CategoryAppService : ApplicationService, ICategoryAppService
+    [Authorize]
+    public class CategoryAppService : ApplicationService, ICategoryAppService, ITransientDependency
     {
         private readonly ICategoryRepository _categoryRepository;
 
