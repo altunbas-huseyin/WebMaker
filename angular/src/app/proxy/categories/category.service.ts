@@ -35,35 +35,11 @@ export class CategoryService {
     { apiName: this.apiName,...config });
   
 
-  getAllWithChildren = (config?: Partial<Rest.Config>) =>
-    this.restService.request<any, CategoryDto[]>({
-      method: 'GET',
-      url: '/api/app/category/with-children',
-    },
-    { apiName: this.apiName,...config });
-  
-
-  getChildren = (parentId: string, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, CategoryDto[]>({
-      method: 'GET',
-      url: `/api/app/category/children/${parentId}`,
-    },
-    { apiName: this.apiName,...config });
-  
-
   getList = (input: PagedAndSortedResultRequestDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<CategoryDto>>({
       method: 'GET',
       url: '/api/app/category',
       params: { sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
-    },
-    { apiName: this.apiName,...config });
-  
-
-  getWithChildren = (id: string, config?: Partial<Rest.Config>) =>
-    this.restService.request<any, CategoryDto>({
-      method: 'GET',
-      url: `/api/app/category/${id}/with-children`,
     },
     { apiName: this.apiName,...config });
   

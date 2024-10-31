@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService, CategoryDto, CreateUpdateCategoryDto } from '@proxy/categories';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ListService, PagedResultDto } from '@abp/ng.core';
+import { ListService, PagedResultDto, PagedAndSortedResultRequestDto } from '@abp/ng.core';
 import { ConfirmationService } from '@abp/ng.theme.shared';
 
 @Component({
@@ -16,7 +16,6 @@ export class CategoriesComponent implements OnInit {
   form: FormGroup;
   selectedCategory = {} as CategoryDto;
   isModalOpen = false;
-  allCategories: CategoryDto[] = [];
 
   constructor(
     public readonly list: ListService,
@@ -26,17 +25,11 @@ export class CategoriesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getAllCategories();
+    const categoryStreamCreator = (query: PagedAndSortedResultRequestDto) =>
+      this.categoryService.getList(query);
 
-    const categoryStreamCreator = query => this.categoryService.getList(query);
     this.list.hookToQuery(categoryStreamCreator).subscribe(response => {
       this.category = response;
-    });
-  }
-
-  getAllCategories() {
-    this.categoryService.getAllWithChildren().subscribe(categories => {
-      this.allCategories = categories;
     });
   }
 
@@ -79,7 +72,6 @@ export class CategoriesComponent implements OnInit {
       this.isModalOpen = false;
       this.form.reset();
       this.list.get();
-      this.getAllCategories();
     });
   }
 
@@ -90,7 +82,6 @@ export class CategoriesComponent implements OnInit {
         if (status === 'confirm') {
           this.categoryService.delete(id).subscribe(() => {
             this.list.get();
-            this.getAllCategories();
           });
         }
       });

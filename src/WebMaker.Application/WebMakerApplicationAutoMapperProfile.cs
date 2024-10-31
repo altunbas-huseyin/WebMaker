@@ -12,6 +12,10 @@ public class WebMakerApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
         
         CreateMap<Category, CategoryDto>();
+        CreateMap<CategoryDto, Category>();
+        
         CreateMap<Category, CreateUpdateCategoryDto>();
+        CreateMap<CreateUpdateCategoryDto, Category>(); // Yeni eklenen satır
+
     }
 }

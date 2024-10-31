@@ -16,7 +16,7 @@ namespace WebMaker.Categories
 
         public CategoryAppService(IRepository<Category, Guid> categoryRepository)
         {
-            this._categoryRepository = categoryRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<PagedResultDto<CategoryDto>> GetListAsync(PagedAndSortedResultRequestDto input)
@@ -29,7 +29,7 @@ namespace WebMaker.Categories
                 input.Sorting
             );
 
-            List<CategoryDto> categoryDtos = ObjectMapper.Map<List<Category>, List<CategoryDto>>(categories);
+            var categoryDtos = ObjectMapper.Map<List<Category>, List<CategoryDto>>(categories);
 
             return new PagedResultDto<CategoryDto>(totalCount, categoryDtos);
         }
@@ -42,19 +42,38 @@ namespace WebMaker.Categories
 
         public async Task<CategoryDto> CreateAsync(CreateUpdateCategoryDto input)
         {
-            // AutoMapper kullanarak DTO'dan entity'ye dönüşüm
-            var category = ObjectMapper.Map<CreateUpdateCategoryDto, Category>(input);
+            var newCategory = new Category(
+                id: GuidGenerator.Create(),
+                name: input.Name,
+                parentCategoryId: input.ParentCategoryId
+            );
 
-            category = await _categoryRepository.InsertAsync(category, autoSave: true);
+            if (!string.IsNullOrEmpty(input.Description))
+            {
+                newCategory.Description = input.Description;
+            }
 
-            return ObjectMapper.Map<Category, CategoryDto>(category);
+            if (!string.IsNullOrEmpty(input.SeoTitle))
+            {
+                newCategory.SetSeoData(
+                    seoTitle: input.SeoTitle,
+                    seoDescription: input.SeoDescription,
+                    seoKeywords: input.SeoKeywords,
+                    seoSlug: input.SeoSlug
+                );
+            }
+
+            newCategory.ParentId = input.ParentId;
+
+            newCategory = await _categoryRepository.InsertAsync(newCategory, autoSave: true);
+
+            return ObjectMapper.Map<Category, CategoryDto>(newCategory);
         }
 
         public async Task<CategoryDto> UpdateAsync(Guid id, CreateUpdateCategoryDto input)
         {
             var category = await _categoryRepository.GetAsync(id);
 
-            // AutoMapper kullanarak DTO'dan entity'ye güncelleme
             ObjectMapper.Map(input, category);
 
             await _categoryRepository.UpdateAsync(category, autoSave: true);

@@ -884,235 +884,10 @@
             {
               "type": "WebMaker.Categories.ICategoryAppService",
               "name": "ICategoryAppService",
-              "methods": [
-                {
-                  "name": "GetAllWithChildrenAsync",
-                  "parametersOnMethod": [],
-                  "returnValue": {
-                    "type": "System.Collections.Generic.List<WebMaker.Categories.CategoryDto>",
-                    "typeSimple": "[WebMaker.Categories.CategoryDto]"
-                  }
-                },
-                {
-                  "name": "GetWithChildrenAsync",
-                  "parametersOnMethod": [
-                    {
-                      "name": "id",
-                      "typeAsString": "System.Guid, System.Private.CoreLib",
-                      "type": "System.Guid",
-                      "typeSimple": "string",
-                      "isOptional": false,
-                      "defaultValue": null
-                    }
-                  ],
-                  "returnValue": {
-                    "type": "WebMaker.Categories.CategoryDto",
-                    "typeSimple": "WebMaker.Categories.CategoryDto"
-                  }
-                },
-                {
-                  "name": "GetChildrenAsync",
-                  "parametersOnMethod": [
-                    {
-                      "name": "parentId",
-                      "typeAsString": "System.Nullable`1[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib",
-                      "type": "System.Guid?",
-                      "typeSimple": "string?",
-                      "isOptional": false,
-                      "defaultValue": null
-                    }
-                  ],
-                  "returnValue": {
-                    "type": "System.Collections.Generic.List<WebMaker.Categories.CategoryDto>",
-                    "typeSimple": "[WebMaker.Categories.CategoryDto]"
-                  }
-                },
-                {
-                  "name": "GetAsync",
-                  "parametersOnMethod": [
-                    {
-                      "name": "id",
-                      "typeAsString": "System.Guid, System.Private.CoreLib",
-                      "type": "System.Guid",
-                      "typeSimple": "string",
-                      "isOptional": false,
-                      "defaultValue": null
-                    }
-                  ],
-                  "returnValue": {
-                    "type": "WebMaker.Categories.CategoryDto",
-                    "typeSimple": "WebMaker.Categories.CategoryDto"
-                  }
-                },
-                {
-                  "name": "GetListAsync",
-                  "parametersOnMethod": [
-                    {
-                      "name": "input",
-                      "typeAsString": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto, Volo.Abp.Ddd.Application.Contracts",
-                      "type": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
-                      "typeSimple": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
-                      "isOptional": false,
-                      "defaultValue": null
-                    }
-                  ],
-                  "returnValue": {
-                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<WebMaker.Categories.CategoryDto>",
-                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<WebMaker.Categories.CategoryDto>"
-                  }
-                },
-                {
-                  "name": "CreateAsync",
-                  "parametersOnMethod": [
-                    {
-                      "name": "input",
-                      "typeAsString": "WebMaker.Categories.CreateUpdateCategoryDto, WebMaker.Application.Contracts",
-                      "type": "WebMaker.Categories.CreateUpdateCategoryDto",
-                      "typeSimple": "WebMaker.Categories.CreateUpdateCategoryDto",
-                      "isOptional": false,
-                      "defaultValue": null
-                    }
-                  ],
-                  "returnValue": {
-                    "type": "WebMaker.Categories.CategoryDto",
-                    "typeSimple": "WebMaker.Categories.CategoryDto"
-                  }
-                },
-                {
-                  "name": "UpdateAsync",
-                  "parametersOnMethod": [
-                    {
-                      "name": "id",
-                      "typeAsString": "System.Guid, System.Private.CoreLib",
-                      "type": "System.Guid",
-                      "typeSimple": "string",
-                      "isOptional": false,
-                      "defaultValue": null
-                    },
-                    {
-                      "name": "input",
-                      "typeAsString": "WebMaker.Categories.CreateUpdateCategoryDto, WebMaker.Application.Contracts",
-                      "type": "WebMaker.Categories.CreateUpdateCategoryDto",
-                      "typeSimple": "WebMaker.Categories.CreateUpdateCategoryDto",
-                      "isOptional": false,
-                      "defaultValue": null
-                    }
-                  ],
-                  "returnValue": {
-                    "type": "WebMaker.Categories.CategoryDto",
-                    "typeSimple": "WebMaker.Categories.CategoryDto"
-                  }
-                },
-                {
-                  "name": "DeleteAsync",
-                  "parametersOnMethod": [
-                    {
-                      "name": "id",
-                      "typeAsString": "System.Guid, System.Private.CoreLib",
-                      "type": "System.Guid",
-                      "typeSimple": "string",
-                      "isOptional": false,
-                      "defaultValue": null
-                    }
-                  ],
-                  "returnValue": {
-                    "type": "System.Void",
-                    "typeSimple": "System.Void"
-                  }
-                }
-              ]
+              "methods": []
             }
           ],
           "actions": {
-            "GetAllWithChildrenAsync": {
-              "uniqueName": "GetAllWithChildrenAsync",
-              "name": "GetAllWithChildrenAsync",
-              "httpMethod": "GET",
-              "url": "api/app/category/with-children",
-              "supportedVersions": [],
-              "parametersOnMethod": [],
-              "parameters": [],
-              "returnValue": {
-                "type": "System.Collections.Generic.List<WebMaker.Categories.CategoryDto>",
-                "typeSimple": "[WebMaker.Categories.CategoryDto]"
-              },
-              "allowAnonymous": false,
-              "implementFrom": "WebMaker.Categories.ICategoryAppService"
-            },
-            "GetWithChildrenAsyncById": {
-              "uniqueName": "GetWithChildrenAsyncById",
-              "name": "GetWithChildrenAsync",
-              "httpMethod": "GET",
-              "url": "api/app/category/{id}/with-children",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "id",
-                  "typeAsString": "System.Guid, System.Private.CoreLib",
-                  "type": "System.Guid",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "id",
-                  "name": "id",
-                  "jsonName": null,
-                  "type": "System.Guid",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": [],
-                  "bindingSourceId": "Path",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "WebMaker.Categories.CategoryDto",
-                "typeSimple": "WebMaker.Categories.CategoryDto"
-              },
-              "allowAnonymous": false,
-              "implementFrom": "WebMaker.Categories.ICategoryAppService"
-            },
-            "GetChildrenAsyncByParentId": {
-              "uniqueName": "GetChildrenAsyncByParentId",
-              "name": "GetChildrenAsync",
-              "httpMethod": "GET",
-              "url": "api/app/category/children/{parentId}",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "parentId",
-                  "typeAsString": "System.Nullable`1[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib",
-                  "type": "System.Guid?",
-                  "typeSimple": "string?",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "parentId",
-                  "name": "parentId",
-                  "jsonName": null,
-                  "type": "System.Guid?",
-                  "typeSimple": "string?",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": [],
-                  "bindingSourceId": "Path",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "System.Collections.Generic.List<WebMaker.Categories.CategoryDto>",
-                "typeSimple": "[WebMaker.Categories.CategoryDto]"
-              },
-              "allowAnonymous": false,
-              "implementFrom": "WebMaker.Categories.ICategoryAppService"
-            },
             "GetListAsyncByInput": {
               "uniqueName": "GetListAsyncByInput",
               "name": "GetListAsync",
@@ -1171,8 +946,8 @@
                 "type": "Volo.Abp.Application.Dtos.PagedResultDto<WebMaker.Categories.CategoryDto>",
                 "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<WebMaker.Categories.CategoryDto>"
               },
-              "allowAnonymous": false,
-              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<WebMaker.Categories.CategoryDto,WebMaker.Categories.CategoryDto,System.Guid,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+              "allowAnonymous": null,
+              "implementFrom": "WebMaker.Categories.CategoryAppService"
             },
             "GetAsyncById": {
               "uniqueName": "GetAsyncById",
@@ -1208,8 +983,8 @@
                 "type": "WebMaker.Categories.CategoryDto",
                 "typeSimple": "WebMaker.Categories.CategoryDto"
               },
-              "allowAnonymous": false,
-              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<WebMaker.Categories.CategoryDto,WebMaker.Categories.CategoryDto,System.Guid,Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto>"
+              "allowAnonymous": null,
+              "implementFrom": "WebMaker.Categories.CategoryAppService"
             },
             "CreateAsyncByInput": {
               "uniqueName": "CreateAsyncByInput",
@@ -1245,8 +1020,8 @@
                 "type": "WebMaker.Categories.CategoryDto",
                 "typeSimple": "WebMaker.Categories.CategoryDto"
               },
-              "allowAnonymous": false,
-              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<WebMaker.Categories.CategoryDto,WebMaker.Categories.CreateUpdateCategoryDto>"
+              "allowAnonymous": null,
+              "implementFrom": "WebMaker.Categories.CategoryAppService"
             },
             "UpdateAsyncByIdAndInput": {
               "uniqueName": "UpdateAsyncByIdAndInput",
@@ -1302,8 +1077,8 @@
                 "type": "WebMaker.Categories.CategoryDto",
                 "typeSimple": "WebMaker.Categories.CategoryDto"
               },
-              "allowAnonymous": false,
-              "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<WebMaker.Categories.CategoryDto,System.Guid,WebMaker.Categories.CreateUpdateCategoryDto>"
+              "allowAnonymous": null,
+              "implementFrom": "WebMaker.Categories.CategoryAppService"
             },
             "DeleteAsyncById": {
               "uniqueName": "DeleteAsyncById",
@@ -1339,8 +1114,8 @@
                 "type": "System.Void",
                 "typeSimple": "System.Void"
               },
-              "allowAnonymous": false,
-              "implementFrom": "Volo.Abp.Application.Services.IDeleteAppService<System.Guid>"
+              "allowAnonymous": null,
+              "implementFrom": "WebMaker.Categories.CategoryAppService"
             }
           }
         }
