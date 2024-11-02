@@ -1,10 +1,11 @@
 using System;
 using System.Text.Json.Serialization;
 using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Entities.Auditing;
 
 namespace WebMaker.Categories;
 
-public class CategoryTranslation : Entity
+public class CategoryTranslation : AuditedAggregateRoot<Guid>
 {
     public Guid CategoryId { get; protected set; }
     public string LanguageCode { get; protected set; }

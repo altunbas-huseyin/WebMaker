@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 using WebMaker.EntityFrameworkCore;
@@ -12,9 +13,11 @@ using WebMaker.EntityFrameworkCore;
 namespace WebMaker.Migrations
 {
     [DbContext(typeof(WebMakerDbContext))]
-    partial class WebMakerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241102184630_InitialTest")]
+    partial class InitialTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

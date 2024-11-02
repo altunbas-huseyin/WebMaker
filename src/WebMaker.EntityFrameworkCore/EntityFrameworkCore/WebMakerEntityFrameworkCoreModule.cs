@@ -55,6 +55,7 @@ public class WebMakerEntityFrameworkCoreModule : AbpModule
         });
         
         context.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+        context.Services.AddTransient<ICategoryTranslationRepository, CategoryTranslationRepository>();
 
     }
 }

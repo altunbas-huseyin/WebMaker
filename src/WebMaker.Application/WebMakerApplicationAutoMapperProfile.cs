@@ -33,5 +33,12 @@ public class WebMakerApplicationAutoMapperProfile : Profile
             .ForMember(x => x.CategoryId, opt => opt.Ignore())
             .ForMember(x => x.LanguageCode, opt => opt.Ignore())
             .ForMember(x => x.Category, opt => opt.Ignore());
+        
+        CreateMap<CreateCategoryTranslationDto, CategoryTranslation>()
+            .ForMember(x => x.CategoryId, opt => opt.Ignore())
+            .ForMember(x => x.LanguageCode, opt => opt.Ignore())
+            .ForMember(x => x.Category, opt => opt.Ignore());
+
+        
     }
 }
