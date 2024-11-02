@@ -3,6 +3,7 @@ export interface CategoryDto {
   id?: string;
   parentCategoryId?: string;
   seoSlug?: string;
+  languageCode?: string;
   translations: CategoryTranslationDto[];
   creationTime?: string;
   lastModificationTime?: string;
@@ -29,6 +30,7 @@ export interface CreateCategoryTranslationDto {
 
 export interface CreateUpdateCategoryDto {
   name: string;
+  languageCode?: string;
   description?: string;
   parentCategoryId?: string;
   seoTitle?: string;

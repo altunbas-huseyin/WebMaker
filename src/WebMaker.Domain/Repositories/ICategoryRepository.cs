@@ -12,7 +12,7 @@ public interface ICategoryRepository : IRepository<Category, Guid>
     Task<List<Category>> GetListWithTranslationsAsync(
         string languageCode,
         int skipCount = 0,
-        int maxResultCount = 10,
+        int maxResultCount = int.MaxValue,
         string sorting = null);
     Task<bool> SlugExistsAsync(string slug, Guid? excludeCategoryId = null);
 }

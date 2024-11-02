@@ -903,7 +903,15 @@
                   }
                 },
                 {
-                  "name": "UpdateTranslationAsync",
+                  "name": "GetAllAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.ListResultDto<WebMaker.Categories.CategoryDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<WebMaker.Categories.CategoryDto>"
+                  }
+                },
+                {
+                  "name": "UpdateAsync",
                   "parametersOnMethod": [
                     {
                       "name": "id",
@@ -914,18 +922,10 @@
                       "defaultValue": null
                     },
                     {
-                      "name": "languageCode",
-                      "typeAsString": "System.String, System.Private.CoreLib",
-                      "type": "System.String",
-                      "typeSimple": "string",
-                      "isOptional": false,
-                      "defaultValue": null
-                    },
-                    {
                       "name": "input",
-                      "typeAsString": "WebMaker.Categories.UpdateCategoryTranslationDto, WebMaker.Application.Contracts",
-                      "type": "WebMaker.Categories.UpdateCategoryTranslationDto",
-                      "typeSimple": "WebMaker.Categories.UpdateCategoryTranslationDto",
+                      "typeAsString": "WebMaker.Categories.CreateUpdateCategoryDto, WebMaker.Application.Contracts",
+                      "type": "WebMaker.Categories.CreateUpdateCategoryDto",
+                      "typeSimple": "WebMaker.Categories.CreateUpdateCategoryDto",
                       "isOptional": false,
                       "defaultValue": null
                     }
@@ -936,20 +936,12 @@
                   }
                 },
                 {
-                  "name": "DeleteTranslationAsync",
+                  "name": "DeleteAsync",
                   "parametersOnMethod": [
                     {
                       "name": "id",
                       "typeAsString": "System.Guid, System.Private.CoreLib",
                       "type": "System.Guid",
-                      "typeSimple": "string",
-                      "isOptional": false,
-                      "defaultValue": null
-                    },
-                    {
-                      "name": "languageCode",
-                      "typeAsString": "System.String, System.Private.CoreLib",
-                      "type": "System.String",
                       "typeSimple": "string",
                       "isOptional": false,
                       "defaultValue": null
@@ -961,11 +953,20 @@
                   }
                 },
                 {
-                  "name": "GetAllAsync",
-                  "parametersOnMethod": [],
+                  "name": "GetAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
                   "returnValue": {
-                    "type": "Volo.Abp.Application.Dtos.ListResultDto<WebMaker.Categories.CategoryDto>",
-                    "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<WebMaker.Categories.CategoryDto>"
+                    "type": "WebMaker.Categories.CategoryDto",
+                    "typeSimple": "WebMaker.Categories.CategoryDto"
                   }
                 }
               ]
@@ -983,6 +984,137 @@
               "returnValue": {
                 "type": "Volo.Abp.Application.Dtos.ListResultDto<WebMaker.Categories.CategoryDto>",
                 "typeSimple": "Volo.Abp.Application.Dtos.ListResultDto<WebMaker.Categories.CategoryDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "WebMaker.Categories.ICategoryAppService"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/app/category/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "WebMaker.Categories.CreateUpdateCategoryDto, WebMaker.Application.Contracts",
+                  "type": "WebMaker.Categories.CreateUpdateCategoryDto",
+                  "typeSimple": "WebMaker.Categories.CreateUpdateCategoryDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "WebMaker.Categories.CreateUpdateCategoryDto",
+                  "typeSimple": "WebMaker.Categories.CreateUpdateCategoryDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "WebMaker.Categories.CategoryDto",
+                "typeSimple": "WebMaker.Categories.CategoryDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "WebMaker.Categories.ICategoryAppService"
+            },
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/category/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "WebMaker.Categories.ICategoryAppService"
+            },
+            "GetAsyncById": {
+              "uniqueName": "GetAsyncById",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/app/category/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "WebMaker.Categories.CategoryDto",
+                "typeSimple": "WebMaker.Categories.CategoryDto"
               },
               "allowAnonymous": null,
               "implementFrom": "WebMaker.Categories.ICategoryAppService"
@@ -1020,140 +1152,6 @@
               "returnValue": {
                 "type": "WebMaker.Categories.CategoryDto",
                 "typeSimple": "WebMaker.Categories.CategoryDto"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "WebMaker.Categories.ICategoryAppService"
-            },
-            "UpdateTranslationAsyncByIdAndLanguageCodeAndInput": {
-              "uniqueName": "UpdateTranslationAsyncByIdAndLanguageCodeAndInput",
-              "name": "UpdateTranslationAsync",
-              "httpMethod": "PUT",
-              "url": "api/app/category/{id}/translation",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "id",
-                  "typeAsString": "System.Guid, System.Private.CoreLib",
-                  "type": "System.Guid",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null
-                },
-                {
-                  "name": "languageCode",
-                  "typeAsString": "System.String, System.Private.CoreLib",
-                  "type": "System.String",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null
-                },
-                {
-                  "name": "input",
-                  "typeAsString": "WebMaker.Categories.UpdateCategoryTranslationDto, WebMaker.Application.Contracts",
-                  "type": "WebMaker.Categories.UpdateCategoryTranslationDto",
-                  "typeSimple": "WebMaker.Categories.UpdateCategoryTranslationDto",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "id",
-                  "name": "id",
-                  "jsonName": null,
-                  "type": "System.Guid",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": [],
-                  "bindingSourceId": "Path",
-                  "descriptorName": ""
-                },
-                {
-                  "nameOnMethod": "languageCode",
-                  "name": "languageCode",
-                  "jsonName": null,
-                  "type": "System.String",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
-                },
-                {
-                  "nameOnMethod": "input",
-                  "name": "input",
-                  "jsonName": null,
-                  "type": "WebMaker.Categories.UpdateCategoryTranslationDto",
-                  "typeSimple": "WebMaker.Categories.UpdateCategoryTranslationDto",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "WebMaker.Categories.CategoryDto",
-                "typeSimple": "WebMaker.Categories.CategoryDto"
-              },
-              "allowAnonymous": null,
-              "implementFrom": "WebMaker.Categories.ICategoryAppService"
-            },
-            "DeleteTranslationAsyncByIdAndLanguageCode": {
-              "uniqueName": "DeleteTranslationAsyncByIdAndLanguageCode",
-              "name": "DeleteTranslationAsync",
-              "httpMethod": "DELETE",
-              "url": "api/app/category/{id}/translation",
-              "supportedVersions": [],
-              "parametersOnMethod": [
-                {
-                  "name": "id",
-                  "typeAsString": "System.Guid, System.Private.CoreLib",
-                  "type": "System.Guid",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null
-                },
-                {
-                  "name": "languageCode",
-                  "typeAsString": "System.String, System.Private.CoreLib",
-                  "type": "System.String",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null
-                }
-              ],
-              "parameters": [
-                {
-                  "nameOnMethod": "id",
-                  "name": "id",
-                  "jsonName": null,
-                  "type": "System.Guid",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": [],
-                  "bindingSourceId": "Path",
-                  "descriptorName": ""
-                },
-                {
-                  "nameOnMethod": "languageCode",
-                  "name": "languageCode",
-                  "jsonName": null,
-                  "type": "System.String",
-                  "typeSimple": "string",
-                  "isOptional": false,
-                  "defaultValue": null,
-                  "constraintTypes": null,
-                  "bindingSourceId": "ModelBinding",
-                  "descriptorName": ""
-                }
-              ],
-              "returnValue": {
-                "type": "System.Void",
-                "typeSimple": "System.Void"
               },
               "allowAnonymous": null,
               "implementFrom": "WebMaker.Categories.ICategoryAppService"
@@ -9522,6 +9520,18 @@
           "regex": null
         },
         {
+          "name": "LanguageCode",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
           "name": "Translations",
           "jsonName": null,
           "type": "[WebMaker.Categories.CategoryTranslationDto]",
@@ -9748,6 +9758,18 @@
           "isRequired": true,
           "minLength": 0,
           "maxLength": 128,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "LanguageCode",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
           "minimum": null,
           "maximum": null,
           "regex": null

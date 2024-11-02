@@ -1,8 +1,7 @@
-// categories.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CategoryService, CategoryDto, CreateUpdateCategoryDto } from '@proxy/categories';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ListService, PagedResultDto } from '@abp/ng.core';
+import { ListService } from '@abp/ng.core';
 import { ConfirmationService } from '@abp/ng.theme.shared';
 
 @Component({
@@ -31,7 +30,6 @@ export class CategoriesComponent implements OnInit {
   loadCategories() {
     this.categoryService.getAll().subscribe(response => {
       this.categories = response.items;
-      // Kategori ağacını oluştur
       this.parentCategories = this.getCategoryHierarchy(this.categories);
     });
   }
@@ -68,12 +66,11 @@ export class CategoriesComponent implements OnInit {
   }
 
   editCategory(id: string) {
-    const category = this.categories.find(c => c.id === id);
-    if (category) {
+    this.categoryService.get(id).subscribe(category => {
       this.selectedCategory = category;
-      this.buildForm(category.parentCategoryId);
+      this.buildForm();
       this.isModalOpen = true;
-    }
+    });
   }
 
   buildForm(parentCategoryId?: string) {
@@ -97,26 +94,15 @@ export class CategoriesComponent implements OnInit {
 
     const request = {
       ...this.form.value,
+      languageCode: 'tr', // Default language for new categories
     } as CreateUpdateCategoryDto;
 
     if (this.selectedCategory.id) {
-      this.categoryService
-        .updateTranslation(
-          this.selectedCategory.id,
-          this.selectedCategory.translations[0].languageCode,
-          {
-            name: this.form.value.name,
-            description: this.form.value.description,
-            seoTitle: this.form.value.seoTitle,
-            seoDescription: this.form.value.seoDescription,
-            seoKeywords: this.form.value.seoKeywords,
-          }
-        )
-        .subscribe(() => {
-          this.isModalOpen = false;
-          this.form.reset();
-          this.loadCategories();
-        });
+      this.categoryService.update(this.selectedCategory.id, request).subscribe(() => {
+        this.isModalOpen = false;
+        this.form.reset();
+        this.loadCategories();
+      });
     } else {
       this.categoryService.create(request).subscribe(() => {
         this.isModalOpen = false;
@@ -142,10 +128,9 @@ export class CategoriesComponent implements OnInit {
 
     this.confirmation.warn('Kategori silinecek', message).subscribe(status => {
       if (status === 'confirm') {
-        alert('implement bekliyor.');
-        //this.categoryService.delete(id).subscribe(() => {
-        // this.loadCategories();
-        //});
+        this.categoryService.delete(id).subscribe(() => {
+          this.loadCategories();
+        });
       }
     });
   }

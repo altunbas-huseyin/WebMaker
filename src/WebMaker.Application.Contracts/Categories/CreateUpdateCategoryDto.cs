@@ -8,7 +8,7 @@ public class CreateUpdateCategoryDto
     [Required]
     [StringLength(CategoryConsts.MaxNameLength)]
     public string Name { get; set; }
-
+    public string LanguageCode { get; set; }
     public string Description { get; set; }
     public Guid? ParentCategoryId { get; set; }
     public string SeoTitle { get; set; }

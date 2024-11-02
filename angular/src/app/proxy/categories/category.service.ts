@@ -1,4 +1,4 @@
-import type { CategoryDto, CreateUpdateCategoryDto, UpdateCategoryTranslationDto } from './models';
+import type { CategoryDto, CreateUpdateCategoryDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import type { ListResultDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
@@ -19,11 +19,18 @@ export class CategoryService {
     { apiName: this.apiName,...config });
   
 
-  deleteTranslation = (id: string, languageCode: string, config?: Partial<Rest.Config>) =>
+  delete = (id: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, void>({
       method: 'DELETE',
-      url: `/api/app/category/${id}/translation`,
-      params: { languageCode },
+      url: `/api/app/category/${id}`,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  get = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, CategoryDto>({
+      method: 'GET',
+      url: `/api/app/category/${id}`,
     },
     { apiName: this.apiName,...config });
   
@@ -36,11 +43,10 @@ export class CategoryService {
     { apiName: this.apiName,...config });
   
 
-  updateTranslation = (id: string, languageCode: string, input: UpdateCategoryTranslationDto, config?: Partial<Rest.Config>) =>
+  update = (id: string, input: CreateUpdateCategoryDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, CategoryDto>({
       method: 'PUT',
-      url: `/api/app/category/${id}/translation`,
-      params: { languageCode },
+      url: `/api/app/category/${id}`,
       body: input,
     },
     { apiName: this.apiName,...config });
