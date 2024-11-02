@@ -1,14 +1,15 @@
+<!-- categories.component.html -->
 <div class="card">
     <div class="card-header">
         <div class="row">
             <div class="col col-md-6">
-                <h5 class="card-title">Ana Kategoriler</h5>
+                <h5 class="card-title">Kategoriler</h5>
             </div>
             <div class="text-end col col-md-6">
                 <div class="text-lg-end pt-2">
                     <button (click)="createCategory()" class="btn btn-primary">
                         <i class="fa fa-plus"></i>
-                        Yeni Ana Kategori
+                        Yeni Kategori
                     </button>
                 </div>
             </div>
@@ -16,34 +17,62 @@
     </div>
 
     <div class="card-body">
+        <!-- Recursive Category Template -->
+        <ng-template #recursiveCategories let-categories>
+            <ng-container *ngFor="let category of categories">
+                <tr>
+                    <td>
+                        <div [style.margin-left.px]="getCategoryLevel(category.id) * 24"
+                            class="d-flex align-items-center">
+                            <span [style.width.px]="24">
+                                <i class="fas" [class.fa-folder]="hasSubCategories(category.id)"
+                                    [class.fa-file]="!hasSubCategories(category.id)"
+                                    [class.text-warning]="hasSubCategories(category.id)"
+                                    [class.text-secondary]="!hasSubCategories(category.id)">
+                                </i>
+                            </span>
+                            {{getCategoryName(category)}}
+                        </div>
+                    </td>
+                    <td>{{category.translations[0]?.description}}</td>
+                    <td>{{category.seoSlug}}</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button (click)="createCategory(category.id)" class="btn btn-success btn-sm"
+                                title="Alt Kategori Ekle">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                            <button (click)="editCategory(category.id)" class="btn btn-primary btn-sm" title="Düzenle">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button (click)="delete(category.id)" class="btn btn-danger btn-sm" title="Sil">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Recursive call for children -->
+                <ng-container *ngIf="category.children?.length">
+                    <ng-container *ngTemplateOutlet="recursiveCategories; context: { $implicit: category.children }">
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+        </ng-template>
+
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Kategori Adı</th>
-                        <th>Açıklama</th>
+                        <th style="width: 40%">Kategori Adı</th>
+                        <th style="width: 30%">Açıklama</th>
                         <th>SEO URL</th>
-                        <th>İşlemler</th>
+                        <th style="width: 120px">İşlemler</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let category of categories">
-                        <td>{{category.translations[0]?.name}}</td>
-                        <td>{{category.translations[0]?.description}}</td>
-                        <td>{{category.seoSlug}}</td>
-                        <td>
-                            <div class="btn-group" role="group">
-                                <button (click)="editCategory(category.id)" class="btn btn-primary btn-sm">
-                                    <i class="fa fa-pencil"></i>
-                                    Düzenle
-                                </button>
-                                <button (click)="delete(category.id)" class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash"></i>
-                                    Sil
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+                    <!-- Root kategorilerden başlayarak recursive template'i çağır -->
+                    <ng-container *ngTemplateOutlet="recursiveCategories; context: { $implicit: parentCategories }">
+                    </ng-container>
                 </tbody>
             </table>
         </div>
@@ -60,6 +89,18 @@
             <div class="form-group">
                 <label for="name">Kategori Adı</label>
                 <input type="text" id="name" class="form-control" formControlName="name" />
+            </div>
+
+            <div class="form-group mt-2" *ngIf="!selectedCategory.id">
+                <label for="parentCategoryId">Üst Kategori</label>
+                <select id="parentCategoryId" class="form-control" formControlName="parentCategoryId">
+                    <option [ngValue]="null">Ana Kategori</option>
+                    <ng-container *ngFor="let category of categories">
+                        <option [value]="category.id" [disabled]="category.id === selectedCategory.id">
+                            {{ '─'.repeat(getCategoryLevel(category.id)) }} {{getCategoryName(category)}}
+                        </option>
+                    </ng-container>
+                </select>
             </div>
 
             <div class="form-group mt-2">
@@ -98,7 +139,7 @@
         <button type="button" class="btn btn-secondary" abpClose>
             Vazgeç
         </button>
-        <button class="btn btn-primary" (click)="save()">
+        <button class="btn btn-primary" (click)="save()" [disabled]="form.invalid">
             {{ selectedCategory.id ? 'Güncelle' : 'Kaydet' }}
         </button>
     </ng-template>

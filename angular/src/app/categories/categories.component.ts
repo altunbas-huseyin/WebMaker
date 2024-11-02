@@ -13,8 +13,9 @@ import { ConfirmationService } from '@abp/ng.theme.shared';
 })
 export class CategoriesComponent implements OnInit {
   categories: CategoryDto[] = [];
-  form: FormGroup;
+  parentCategories: CategoryDto[] = [];
   selectedCategory = {} as CategoryDto;
+  form: FormGroup;
   isModalOpen = false;
 
   constructor(
@@ -29,14 +30,40 @@ export class CategoriesComponent implements OnInit {
 
   loadCategories() {
     this.categoryService.getAll().subscribe(response => {
-      // Sadece parentCategoryId'si olmayan (null veya undefined) kategorileri filtrele
-      this.categories = response.items.filter(category => !category.parentCategoryId);
+      this.categories = response.items;
+      // Kategori ağacını oluştur
+      this.parentCategories = this.getCategoryHierarchy(this.categories);
     });
   }
 
-  createCategory() {
+  getCategoryHierarchy(categories: CategoryDto[], parentId: string = null): CategoryDto[] {
+    return categories
+      .filter(c => c.parentCategoryId === parentId)
+      .map(category => ({
+        ...category,
+        children: this.getCategoryHierarchy(categories, category.id),
+      })) as CategoryDto[];
+  }
+
+  getCategoryLevel(categoryId: string): number {
+    let level = 0;
+    let currentCategory = this.categories.find(c => c.id === categoryId);
+
+    while (currentCategory?.parentCategoryId) {
+      level++;
+      currentCategory = this.categories.find(c => c.id === currentCategory.parentCategoryId);
+    }
+
+    return level;
+  }
+
+  hasSubCategories(categoryId: string): boolean {
+    return this.categories.some(c => c.parentCategoryId === categoryId);
+  }
+
+  createCategory(parentCategoryId?: string) {
     this.selectedCategory = {} as CategoryDto;
-    this.buildForm();
+    this.buildForm(parentCategoryId);
     this.isModalOpen = true;
   }
 
@@ -44,18 +71,18 @@ export class CategoriesComponent implements OnInit {
     const category = this.categories.find(c => c.id === id);
     if (category) {
       this.selectedCategory = category;
-      this.buildForm();
+      this.buildForm(category.parentCategoryId);
       this.isModalOpen = true;
     }
   }
 
-  buildForm() {
-    // İlk translation'ı al (varsayılan dil için)
+  buildForm(parentCategoryId?: string) {
     const defaultTranslation = this.selectedCategory.translations?.[0];
 
     this.form = this.fb.group({
       name: [defaultTranslation?.name || '', Validators.required],
       description: [defaultTranslation?.description || ''],
+      parentCategoryId: [parentCategoryId || this.selectedCategory.parentCategoryId],
       seoTitle: [defaultTranslation?.seoTitle || ''],
       seoDescription: [defaultTranslation?.seoDescription || ''],
       seoKeywords: [defaultTranslation?.seoKeywords || ''],
@@ -70,7 +97,6 @@ export class CategoriesComponent implements OnInit {
 
     const request = {
       ...this.form.value,
-      parentCategoryId: null, // Ana kategori olarak kaydet
     } as CreateUpdateCategoryDto;
 
     if (this.selectedCategory.id) {
@@ -101,15 +127,35 @@ export class CategoriesComponent implements OnInit {
   }
 
   delete(id: string) {
-    this.confirmation
-      .warn('Kategori silinecek', 'Bu kategoriyi silmek istediğinizden emin misiniz?')
-      .subscribe(status => {
-        if (status === 'confirm') {
-          alert('delete eklenecek.');
-          //this.categoryService.delete(id).subscribe(() => {
-          //  this.loadCategories();
-          //});
-        }
-      });
+    const category = this.categories.find(c => c.id === id);
+    if (!category) return;
+
+    const hasChildren = this.hasSubCategories(id);
+    const message = hasChildren
+      ? 'Bu kategoriyi silmek için önce alt kategorilerini silmelisiniz!'
+      : 'Bu kategoriyi silmek istediğinizden emin misiniz?';
+
+    if (hasChildren) {
+      this.confirmation.warn('Uyarı', message);
+      return;
+    }
+
+    this.confirmation.warn('Kategori silinecek', message).subscribe(status => {
+      if (status === 'confirm') {
+        alert('implement bekliyor.');
+        //this.categoryService.delete(id).subscribe(() => {
+        // this.loadCategories();
+        //});
+      }
+    });
+  }
+
+  getCategoryName(category: CategoryDto): string {
+    return category.translations?.[0]?.name || '';
+  }
+
+  getParentCategoryName(parentCategoryId: string): string {
+    const parent = this.categories.find(c => c.id === parentCategoryId);
+    return parent?.translations?.[0]?.name || '';
   }
 }
