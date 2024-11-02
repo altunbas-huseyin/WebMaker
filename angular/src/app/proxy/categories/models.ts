@@ -20,7 +20,7 @@ export interface CategoryTranslationDto {
 
 export interface CreateCategoryTranslationDto {
   categoryId: string;
-  languageCode?: string;
+  languageCode: string;
   name: string;
   description?: string;
   seoTitle?: string;
@@ -41,7 +41,7 @@ export interface CreateUpdateCategoryDto {
 
 export interface UpdateCategoryTranslationDto {
   categoryId: string;
-  languageCode?: string;
+  languageCode: string;
   name: string;
   description?: string;
   seoTitle?: string;

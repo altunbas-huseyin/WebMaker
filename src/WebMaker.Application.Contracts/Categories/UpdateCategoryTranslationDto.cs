@@ -6,10 +6,10 @@ namespace WebMaker.Categories;
 public class UpdateCategoryTranslationDto
 {
     [Required]
-    public Guid CategoryId { get; protected set; }
+    public Guid CategoryId { get; set; }
     
-    public string LanguageCode { get; protected set; }
-
+    [Required]
+    public string LanguageCode { get; set; }
     
     [Required]
     [StringLength(CategoryConsts.MaxNameLength)]
@@ -24,9 +24,10 @@ public class UpdateCategoryTranslationDto
 public class CreateCategoryTranslationDto
 {
     [Required]
-    public Guid CategoryId { get; protected set; }
+    public Guid CategoryId { get;  set; }
 
-    public string LanguageCode { get; protected set; }
+    [Required]
+    public string LanguageCode { get; set; }
 
     
     [Required]
