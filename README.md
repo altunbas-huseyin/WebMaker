@@ -6,8 +6,8 @@ This is a layered startup solution based on [Domain Driven Design (DDD)](https:/
 
 ### Pre-requirements
 
-* [.NET8.0+ SDK](https://dotnet.microsoft.com/download/dotnet)
-* [Node v18 or 20](https://nodejs.org/en)
+- [.NET8.0+ SDK](https://dotnet.microsoft.com/download/dotnet)
+- [Node v18 or 20](https://nodejs.org/en)
 
 ### Configurations
 
@@ -15,10 +15,11 @@ The solution comes with a default configuration that works out of the box. Howev
 
 ** Check the `ConnectionStrings` in `appsettings.json` files under the `WebMaker.HttpApi.Host` and `WebMaker.DbMigrator` projects and change it if you need.
 **
+
 ### Before running the application
 
-* Run `abp install-libs` command on your solution folder to install client-side package dependencies. This step is automatically done when you create a new solution, if you didn't especially disabled it. However, you should run it yourself if you have first cloned this solution from your source control, or added a new client-side package dependency to your solution.
-* Run `WebMaker.DbMigrator` to create the initial database. This step is also automatically done when you create a new solution, if you didn't especially disabled it. This should be done in the first run. It is also needed if a new database migration is added to the solution later.
+- Run `abp install-libs` command on your solution folder to install client-side package dependencies. This step is automatically done when you create a new solution, if you didn't especially disabled it. However, you should run it yourself if you have first cloned this solution from your source control, or added a new client-side package dependency to your solution.
+- Run `WebMaker.DbMigrator` to create the initial database. This step is also automatically done when you create a new solution, if you didn't especially disabled it. This should be done in the first run. It is also needed if a new database migration is added to the solution later.
 
 #### Generating a Signing Certificate
 
@@ -42,9 +43,9 @@ For more information, please refer to: [https://documentation.openiddict.com/con
 
 This is a layered monolith application that consists of the following applications:
 
-* `WebMaker.DbMigrator`: A console application which applies the migrations and also seeds the initial data. It is useful on development as well as on production environment.
-** `WebMaker.HttpApi.Host`: ASP.NET Core API application that is used to expose the APIs to the clients.
-* `angular`: Angular application.
+- `WebMaker.DbMigrator`: A console application which applies the migrations and also seeds the initial data. It is useful on development as well as on production environment.
+  \*\* `WebMaker.HttpApi.Host`: ASP.NET Core API application that is used to expose the APIs to the clients.
+- `angular`: Angular application.
 
 ## Deploying the application
 
@@ -54,13 +55,18 @@ Deploying an ABP application is not different than deploying any .NET or ASP.NET
 
 You can see the following resources to learn more about your solution and the ABP Framework:
 
-* [Web Application Development Tutorial](https://abp.io/docs/latest/tutorials/book-store/part-1)
-* [Application Startup Template](https://abp.io/docs/latest/startup-templates/application/index)
-
+- [Web Application Development Tutorial](https://abp.io/docs/latest/tutorials/book-store/part-1)
+- [Application Startup Template](https://abp.io/docs/latest/startup-templates/application/index)
 
 ### Genel İşleyiş
+
 WebMaker.Domain altında model oluştur.
 WebMaker.Domain.Shared altında statik tipleri oluştur.
 WebMaker.Application.Contracts altında DTO ları oluştur.
 WebMaker.EntityFrameworkCore altında tanımlamaları yap.
 WebMaker.Application altında servis oluştur.
+
+DB Migrate
+Add-Migration "InitWheel" -OutputDir "Migrations"
+Update-Database
+angular model (sayfa) ekleme : ng g m about --module app --route about
