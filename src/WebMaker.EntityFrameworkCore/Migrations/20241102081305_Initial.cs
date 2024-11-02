@@ -427,6 +427,59 @@ namespace WebMaker.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppArticles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: false),
+                    Summary = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    IsPublished = table.Column<bool>(type: "bit", nullable: false),
+                    PublishDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    SeoTitle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SeoDescription = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
+                    SeoKeywords = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    SeoSlug = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppArticles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppCategories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SeoSlug = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ParentCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppCategories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppCategories_AppCategories_ParentCategoryId",
+                        column: x => x.ParentCategoryId,
+                        principalTable: "AppCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictApplications",
                 columns: table => new
                 {
@@ -740,6 +793,53 @@ namespace WebMaker.Migrations
                         name: "FK_AbpUserTokens_AbpUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AbpUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppArticleCategories",
+                columns: table => new
+                {
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppArticleCategories", x => new { x.ArticleId, x.CategoryId });
+                    table.ForeignKey(
+                        name: "FK_AppArticleCategories_AppArticles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalTable: "AppArticles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppArticleCategories_AppCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "AppCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppCategoryTranslations",
+                columns: table => new
+                {
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LanguageCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    SeoTitle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SeoDescription = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
+                    SeoKeywords = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppCategoryTranslations", x => new { x.CategoryId, x.LanguageCode });
+                    table.ForeignKey(
+                        name: "FK_AppCategoryTranslations_AppCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "AppCategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1074,6 +1174,47 @@ namespace WebMaker.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppArticleCategories_ArticleId",
+                table: "AppArticleCategories",
+                column: "ArticleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppArticleCategories_CategoryId",
+                table: "AppArticleCategories",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppArticles_SeoSlug",
+                table: "AppArticles",
+                column: "SeoSlug");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppCategories_ParentCategoryId",
+                table: "AppCategories",
+                column: "ParentCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppCategories_SeoSlug",
+                table: "AppCategories",
+                column: "SeoSlug");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppCategoryTranslations_CategoryId",
+                table: "AppCategoryTranslations",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppCategoryTranslations_CategoryId_LanguageCode",
+                table: "AppCategoryTranslations",
+                columns: new[] { "CategoryId", "LanguageCode" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppCategoryTranslations_LanguageCode",
+                table: "AppCategoryTranslations",
+                column: "LanguageCode");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId");
@@ -1183,6 +1324,12 @@ namespace WebMaker.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
+                name: "AppArticleCategories");
+
+            migrationBuilder.DropTable(
+                name: "AppCategoryTranslations");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 
             migrationBuilder.DropTable(
@@ -1205,6 +1352,12 @@ namespace WebMaker.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");
+
+            migrationBuilder.DropTable(
+                name: "AppArticles");
+
+            migrationBuilder.DropTable(
+                name: "AppCategories");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");

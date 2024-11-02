@@ -8,7 +8,7 @@ using WebMaker.Entities.Articles;
 using WebMaker.EntityFrameworkCore;
 using System.Linq;
 
-namespace WebMaker.Articles
+namespace WebMaker.Repositories
 {
     public class ArticleRepository : EfCoreRepository<WebMakerDbContext, Article, Guid>, IArticleRepository
     {

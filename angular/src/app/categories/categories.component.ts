@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService, CategoryDto, CreateUpdateCategoryDto } from '@proxy/categories';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ListService, PagedResultDto, PagedAndSortedResultRequestDto } from '@abp/ng.core';
+import { ListService, PagedResultDto } from '@abp/ng.core';
 import { ConfirmationService } from '@abp/ng.theme.shared';
 
 @Component({
@@ -12,24 +12,25 @@ import { ConfirmationService } from '@abp/ng.theme.shared';
   providers: [ListService],
 })
 export class CategoriesComponent implements OnInit {
-  category = { items: [], totalCount: 0 } as PagedResultDto<CategoryDto>;
+  categories: CategoryDto[] = [];
   form: FormGroup;
   selectedCategory = {} as CategoryDto;
   isModalOpen = false;
 
   constructor(
-    public readonly list: ListService,
     private categoryService: CategoryService,
     private fb: FormBuilder,
     private confirmation: ConfirmationService
   ) {}
 
   ngOnInit() {
-    const categoryStreamCreator = (query: PagedAndSortedResultRequestDto) =>
-      this.categoryService.getList(query);
+    this.loadCategories();
+  }
 
-    this.list.hookToQuery(categoryStreamCreator).subscribe(response => {
-      this.category = response;
+  loadCategories() {
+    this.categoryService.getAll().subscribe(response => {
+      // Sadece parentCategoryId'si olmayan (null veya undefined) kategorileri filtrele
+      this.categories = response.items.filter(category => !category.parentCategoryId);
     });
   }
 
@@ -40,21 +41,24 @@ export class CategoriesComponent implements OnInit {
   }
 
   editCategory(id: string) {
-    this.categoryService.get(id).subscribe(category => {
+    const category = this.categories.find(c => c.id === id);
+    if (category) {
       this.selectedCategory = category;
       this.buildForm();
       this.isModalOpen = true;
-    });
+    }
   }
 
   buildForm() {
+    // İlk translation'ı al (varsayılan dil için)
+    const defaultTranslation = this.selectedCategory.translations?.[0];
+
     this.form = this.fb.group({
-      name: [this.selectedCategory.name || '', Validators.required],
-      description: [this.selectedCategory.description || ''],
-      parentCategoryId: [this.selectedCategory.parentCategoryId || ''],
-      seoTitle: [this.selectedCategory.seoTitle || ''],
-      seoDescription: [this.selectedCategory.seoDescription || ''],
-      seoKeywords: [this.selectedCategory.seoKeywords || ''],
+      name: [defaultTranslation?.name || '', Validators.required],
+      description: [defaultTranslation?.description || ''],
+      seoTitle: [defaultTranslation?.seoTitle || ''],
+      seoDescription: [defaultTranslation?.seoDescription || ''],
+      seoKeywords: [defaultTranslation?.seoKeywords || ''],
       seoSlug: [this.selectedCategory.seoSlug || ''],
     });
   }
@@ -64,15 +68,36 @@ export class CategoriesComponent implements OnInit {
       return;
     }
 
-    const request = this.selectedCategory.id
-      ? this.categoryService.update(this.selectedCategory.id, this.form.value)
-      : this.categoryService.create(this.form.value);
+    const request = {
+      ...this.form.value,
+      parentCategoryId: null, // Ana kategori olarak kaydet
+    } as CreateUpdateCategoryDto;
 
-    request.subscribe(() => {
-      this.isModalOpen = false;
-      this.form.reset();
-      this.list.get();
-    });
+    if (this.selectedCategory.id) {
+      this.categoryService
+        .updateTranslation(
+          this.selectedCategory.id,
+          this.selectedCategory.translations[0].languageCode,
+          {
+            name: this.form.value.name,
+            description: this.form.value.description,
+            seoTitle: this.form.value.seoTitle,
+            seoDescription: this.form.value.seoDescription,
+            seoKeywords: this.form.value.seoKeywords,
+          }
+        )
+        .subscribe(() => {
+          this.isModalOpen = false;
+          this.form.reset();
+          this.loadCategories();
+        });
+    } else {
+      this.categoryService.create(request).subscribe(() => {
+        this.isModalOpen = false;
+        this.form.reset();
+        this.loadCategories();
+      });
+    }
   }
 
   delete(id: string) {
@@ -80,9 +105,10 @@ export class CategoriesComponent implements OnInit {
       .warn('Kategori silinecek', 'Bu kategoriyi silmek istediğinizden emin misiniz?')
       .subscribe(status => {
         if (status === 'confirm') {
-          this.categoryService.delete(id).subscribe(() => {
-            this.list.get();
-          });
+          alert('delete eklenecek.');
+          //this.categoryService.delete(id).subscribe(() => {
+          //  this.loadCategories();
+          //});
         }
       });
   }

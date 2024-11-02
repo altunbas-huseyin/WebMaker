@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Volo.Abp.Application.Dtos;
 
-namespace WebMaker.Categories
+namespace WebMaker.Categories;
+
+public class CategoryDto
 {
-    public class CategoryDto : AuditedEntityDto<Guid>
-    {
-        public Guid ParentId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public Guid? ParentCategoryId { get; set; }
-        public CategoryDto ParentCategory { get; set; }
-        public List<CategoryDto> SubCategories { get; set; }
-
-        public string SeoTitle { get; set; }
-        public string SeoDescription { get; set; }
-        public string SeoKeywords { get; set; }
-        public string SeoSlug { get; set; }
-    }
+    public Guid Id { get; set; }
+    public Guid? ParentCategoryId { get; set; }
+    public string SeoSlug { get; set; }
+    public List<CategoryTranslationDto> Translations { get; set; }
+    public DateTime CreationTime { get; set; }
+    public DateTime? LastModificationTime { get; set; }
 }

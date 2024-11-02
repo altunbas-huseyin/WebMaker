@@ -2,51 +2,51 @@
     <div class="card-header">
         <div class="row">
             <div class="col col-md-6">
-                <h5 class="card-title">Kategoriler</h5>
+                <h5 class="card-title">Ana Kategoriler</h5>
             </div>
             <div class="text-end col col-md-6">
                 <div class="text-lg-end pt-2">
-                    <button class="btn btn-primary" (click)="createCategory()">
-                        <i class="fa fa-plus me-1"></i>
-                        <span>Yeni Kategori</span>
+                    <button (click)="createCategory()" class="btn btn-primary">
+                        <i class="fa fa-plus"></i>
+                        Yeni Ana Kategori
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="card-body">
-        <ngx-datatable [rows]="category.items" [count]="category.totalCount" [list]="list" default>
-            <ngx-datatable-column name="name" [sortable]="false">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.name }}
-                </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="parentCategory" [sortable]="false">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.parentCategory?.name }}
-                </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="description" [sortable]="false">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.description }}
-                </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="actions" [sortable]="false">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-primary btn-sm" (click)="editCategory(row.id)">
-                            <i class="fa fa-pencil"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" (click)="delete(row.id)">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                </ng-template>
-            </ngx-datatable-column>
-        </ngx-datatable>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Kategori Adı</th>
+                        <th>Açıklama</th>
+                        <th>SEO URL</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let category of categories">
+                        <td>{{category.translations[0]?.name}}</td>
+                        <td>{{category.translations[0]?.description}}</td>
+                        <td>{{category.seoSlug}}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button (click)="editCategory(category.id)" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-pencil"></i>
+                                    Düzenle
+                                </button>
+                                <button (click)="delete(category.id)" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash"></i>
+                                    Sil
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -56,49 +56,39 @@
     </ng-template>
 
     <ng-template #abpBody>
-        <form [formGroup]="form" (ngSubmit)="save()">
+        <form [formGroup]="form">
             <div class="form-group">
-                <label for="category-name">Kategori Adı</label>
-                <input type="text" id="category-name" class="form-control" formControlName="name" />
+                <label for="name">Kategori Adı</label>
+                <input type="text" id="name" class="form-control" formControlName="name" />
             </div>
 
             <div class="form-group mt-2">
-                <label for="parent-category">Üst Kategori</label>
-                <select class="form-control" id="parent-category" formControlName="parentCategoryId">
-                    <option [ngValue]="null">Seçiniz</option>
-                    <option *ngFor="let category of allCategories" [value]="category.id">
-                        {{ category.name }}
-                    </option>
-                </select>
-            </div>
-
-            <div class="form-group mt-2">
-                <label for="category-description">Açıklama</label>
-                <textarea id="category-description" class="form-control" formControlName="description"
-                    rows="3"></textarea>
+                <label for="description">Açıklama</label>
+                <textarea id="description" class="form-control" formControlName="description" rows="3"></textarea>
             </div>
 
             <div class="mt-2">
                 <h4>SEO Bilgileri</h4>
+
                 <div class="form-group">
-                    <label for="seo-title">SEO Başlığı</label>
-                    <input type="text" id="seo-title" class="form-control" formControlName="seoTitle" />
+                    <label for="seoTitle">SEO Başlığı</label>
+                    <input type="text" id="seoTitle" class="form-control" formControlName="seoTitle" />
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="seo-description">SEO Açıklaması</label>
-                    <textarea id="seo-description" class="form-control" formControlName="seoDescription"
+                    <label for="seoDescription">SEO Açıklaması</label>
+                    <textarea id="seoDescription" class="form-control" formControlName="seoDescription"
                         rows="2"></textarea>
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="seo-keywords">SEO Anahtar Kelimeleri</label>
-                    <input type="text" id="seo-keywords" class="form-control" formControlName="seoKeywords" />
+                    <label for="seoKeywords">SEO Anahtar Kelimeleri</label>
+                    <input type="text" id="seoKeywords" class="form-control" formControlName="seoKeywords" />
                 </div>
 
                 <div class="form-group mt-2">
-                    <label for="seo-slug">SEO URL</label>
-                    <input type="text" id="seo-slug" class="form-control" formControlName="seoSlug" />
+                    <label for="seoSlug">SEO URL</label>
+                    <input type="text" id="seoSlug" class="form-control" formControlName="seoSlug" />
                 </div>
             </div>
         </form>
@@ -108,8 +98,7 @@
         <button type="button" class="btn btn-secondary" abpClose>
             Vazgeç
         </button>
-        <button class="btn btn-primary" (click)="save()" [disabled]="form.invalid">
-            <i class="fa fa-check me-1"></i>
+        <button class="btn btn-primary" (click)="save()">
             {{ selectedCategory.id ? 'Güncelle' : 'Kaydet' }}
         </button>
     </ng-template>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
@@ -7,83 +8,93 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using System.Linq;
+using Microsoft.Extensions.Localization;
+using WebMaker.Repositories;
 
-namespace WebMaker.Categories
+namespace WebMaker.Categories;
+
+public class CategoryAppService : ApplicationService, ICategoryAppService
 {
-    public class CategoryAppService : ApplicationService, ICategoryAppService
+    private readonly ICategoryRepository _categoryRepository;
+
+    public CategoryAppService(
+        ICategoryRepository categoryRepository)
     {
-        private readonly IRepository<Category, Guid> _categoryRepository;
+        _categoryRepository = categoryRepository;
+    }
+    
+    public async Task<ListResultDto<CategoryDto>> GetAllAsync()
+    {
+        var currentLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    
+        // Get categories with translations and other related data
+        var categories = await _categoryRepository.GetListWithTranslationsAsync(
+            languageCode: currentLanguage
+        );
 
-        public CategoryAppService(IRepository<Category, Guid> categoryRepository)
+        // Map to DTOs using AutoMapper
+        var categoryDtos = ObjectMapper.Map<List<Category>, List<CategoryDto>>(categories);
+
+        return new ListResultDto<CategoryDto>(categoryDtos);
+    }
+
+    
+    public async Task<CategoryDto> CreateAsync(CreateUpdateCategoryDto input)
+    {
+        var currentLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        
+        var category = new Category(
+            GuidGenerator.Create(),
+            input.Name,
+            currentLanguage,
+            input.ParentCategoryId
+        );
+
+        if (!string.IsNullOrEmpty(input.Description))
         {
-            _categoryRepository = categoryRepository;
-        }
-
-        public async Task<PagedResultDto<CategoryDto>> GetListAsync(PagedAndSortedResultRequestDto input)
-        {
-            var totalCount = await _categoryRepository.CountAsync();
-
-            var categories = await _categoryRepository.GetPagedListAsync(
-                input.SkipCount,
-                input.MaxResultCount,
-                input.Sorting
+            category.UpdateTranslation(
+                currentLanguage,
+                input.Name,
+                description: input.Description,
+                seoTitle: input.SeoTitle,
+                seoDescription: input.SeoDescription,
+                seoKeywords: input.SeoKeywords
             );
-
-            var categoryDtos = ObjectMapper.Map<List<Category>, List<CategoryDto>>(categories);
-
-            return new PagedResultDto<CategoryDto>(totalCount, categoryDtos);
         }
 
-        public async Task<CategoryDto> GetAsync(Guid id)
+        if (!string.IsNullOrEmpty(input.SeoSlug))
         {
-            var category = await _categoryRepository.GetAsync(id);
-            return ObjectMapper.Map<Category, CategoryDto>(category);
+            category.SetSeoSlug(input.SeoSlug);
         }
 
-        public async Task<CategoryDto> CreateAsync(CreateUpdateCategoryDto input)
-        {
-            var newCategory = new Category(
-                id: GuidGenerator.Create(),
-                name: input.Name,
-                parentCategoryId: input.ParentCategoryId
-            );
+        category = await _categoryRepository.InsertAsync(category, autoSave: true);
+        return ObjectMapper.Map<Category, CategoryDto>(category);
+    }
 
-            if (!string.IsNullOrEmpty(input.Description))
-            {
-                newCategory.Description = input.Description;
-            }
+    public async Task<CategoryDto> UpdateTranslationAsync(
+        Guid id,
+        string languageCode,
+        UpdateCategoryTranslationDto input)
+    {
+        var category = await _categoryRepository.GetWithTranslationsAsync(id);
 
-            if (!string.IsNullOrEmpty(input.SeoTitle))
-            {
-                newCategory.SetSeoData(
-                    seoTitle: input.SeoTitle,
-                    seoDescription: input.SeoDescription,
-                    seoKeywords: input.SeoKeywords,
-                    seoSlug: input.SeoSlug
-                );
-            }
+        category.UpdateTranslation(
+            languageCode,
+            input.Name,
+            input.Description,
+            input.SeoTitle,
+            input.SeoDescription,
+            input.SeoKeywords
+        );
 
-            newCategory.ParentId = input.ParentId;
+        await _categoryRepository.UpdateAsync(category);
+        return ObjectMapper.Map<Category, CategoryDto>(category);
+    }
 
-            newCategory = await _categoryRepository.InsertAsync(newCategory, autoSave: true);
-
-            return ObjectMapper.Map<Category, CategoryDto>(newCategory);
-        }
-
-        public async Task<CategoryDto> UpdateAsync(Guid id, CreateUpdateCategoryDto input)
-        {
-            var category = await _categoryRepository.GetAsync(id);
-
-            ObjectMapper.Map(input, category);
-
-            await _categoryRepository.UpdateAsync(category, autoSave: true);
-
-            return ObjectMapper.Map<Category, CategoryDto>(category);
-        }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            await _categoryRepository.DeleteAsync(id, autoSave: true);
-        }
+    public async Task DeleteTranslationAsync(Guid id, string languageCode)
+    {
+        var category = await _categoryRepository.GetWithTranslationsAsync(id);
+        category.RemoveTranslation(languageCode);
+        await _categoryRepository.UpdateAsync(category);
     }
 }

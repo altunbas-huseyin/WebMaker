@@ -13,6 +13,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using WebMaker.Repositories;
 
 namespace WebMaker.EntityFrameworkCore;
 
@@ -53,5 +54,7 @@ public class WebMakerEntityFrameworkCoreModule : AbpModule
             options.UseSqlServer();
         });
         
+        context.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+
     }
 }

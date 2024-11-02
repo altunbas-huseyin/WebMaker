@@ -1934,11 +1934,6 @@ namespace WebMaker.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("CreatorId");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<string>("ExtraProperties")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -1952,16 +1947,44 @@ namespace WebMaker.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<Guid?>("ParentCategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ParentId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SeoSlug")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCategoryId");
+
+                    b.HasIndex("SeoSlug");
+
+                    b.ToTable("AppCategories", (string)null);
+                });
+
+            modelBuilder.Entity("WebMaker.Categories.CategoryTranslation", b =>
+                {
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LanguageCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("SeoDescription")
                         .IsRequired()
@@ -1973,23 +1996,21 @@ namespace WebMaker.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("SeoSlug")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("SeoTitle")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoryId", "LanguageCode");
 
-                    b.HasIndex("ParentCategoryId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("SeoSlug");
+                    b.HasIndex("LanguageCode");
 
-                    b.ToTable("AppCategories", (string)null);
+                    b.HasIndex("CategoryId", "LanguageCode")
+                        .IsUnique();
+
+                    b.ToTable("AppCategoryTranslations", (string)null);
                 });
 
             modelBuilder.Entity("WebMaker.Entities.Articles.Article", b =>
@@ -2256,6 +2277,17 @@ namespace WebMaker.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("WebMaker.Categories.CategoryTranslation", b =>
+                {
+                    b.HasOne("WebMaker.Categories.Category", "Category")
+                        .WithMany("Translations")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
                 {
                     b.Navigation("Actions");
@@ -2301,6 +2333,8 @@ namespace WebMaker.Migrations
                     b.Navigation("Articles");
 
                     b.Navigation("SubCategories");
+
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("WebMaker.Entities.Articles.Article", b =>

@@ -61,6 +61,7 @@ public class WebMakerDbContext :
     public DbSet<Article> Articles { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<ArticleCategory> ArticleCategories { get; set; }
+    public DbSet<CategoryTranslation> CategoryTranslations { get; set; }  
 
     #endregion
 
@@ -130,42 +131,7 @@ public class WebMakerDbContext :
             b.HasIndex(x => x.SeoSlug);
         });
 
-        builder.Entity<Category>(b =>
-        {
-            b.ToTable(WebMakerConsts.DbTablePrefix + "Categories", WebMakerConsts.DbSchema);
-
-            b.ConfigureByConvention();
-
-            b.Property(x => x.Name)
-                .IsRequired()
-                .HasMaxLength(CategoryConsts.MaxNameLength);
-
-            b.Property(x => x.Description)
-                .HasMaxLength(CategoryConsts.MaxDescriptionLength);
-
-            b.Property(x => x.SeoTitle)
-                .HasMaxLength(CategoryConsts.MaxSeoTitleLength);
-
-            b.Property(x => x.SeoDescription)
-                .HasMaxLength(CategoryConsts.MaxSeoDescriptionLength);
-
-            b.Property(x => x.SeoKeywords)
-                .HasMaxLength(CategoryConsts.MaxSeoKeywordsLength);
-
-            b.Property(x => x.SeoSlug)
-                .HasMaxLength(CategoryConsts.MaxSeoSlugLength);
-
-            // Self-referencing relationship for hierarchical categories
-            b.HasOne(x => x.ParentCategory)
-                .WithMany(x => x.SubCategories)
-                .HasForeignKey(x => x.ParentCategoryId)
-                .IsRequired(false)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Index on ParentCategoryId and SeoSlug
-            b.HasIndex(x => x.ParentCategoryId);
-            b.HasIndex(x => x.SeoSlug);
-        });
+        
 
         builder.Entity<ArticleCategory>(b =>
         {
@@ -192,6 +158,68 @@ public class WebMakerDbContext :
             // Indexes
             b.HasIndex(x => x.ArticleId);
             b.HasIndex(x => x.CategoryId);
+        });
+        
+          builder.Entity<Category>(b =>
+        {
+            b.ToTable(WebMakerConsts.DbTablePrefix + "Categories", WebMakerConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            // Name ve Description gibi çevirilen alanlar CategoryTranslation'a taşındı
+            b.Property(x => x.SeoSlug)
+                .HasMaxLength(CategoryConsts.MaxSeoSlugLength);
+
+            // Self-referencing relationship for hierarchical categories
+            b.HasOne(x => x.ParentCategory)
+                .WithMany(x => x.SubCategories)
+                .HasForeignKey(x => x.ParentCategoryId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Translations relationship
+            b.HasMany(x => x.Translations)
+                .WithOne(x => x.Category)
+                .HasForeignKey(x => x.CategoryId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Index on ParentCategoryId and SeoSlug
+            b.HasIndex(x => x.ParentCategoryId);
+            b.HasIndex(x => x.SeoSlug);
+        });
+
+        builder.Entity<CategoryTranslation>(b =>
+        {
+            b.ToTable(WebMakerConsts.DbTablePrefix + "CategoryTranslations", WebMakerConsts.DbSchema);
+
+            // Composite primary key
+            b.HasKey(x => new { x.CategoryId, x.LanguageCode });
+
+            b.Property(x => x.LanguageCode)
+                .IsRequired()
+                .HasMaxLength(10);
+
+            b.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(CategoryConsts.MaxNameLength);
+
+            b.Property(x => x.Description)
+                .HasMaxLength(CategoryConsts.MaxDescriptionLength);
+
+            b.Property(x => x.SeoTitle)
+                .HasMaxLength(CategoryConsts.MaxSeoTitleLength);
+
+            b.Property(x => x.SeoDescription)
+                .HasMaxLength(CategoryConsts.MaxSeoDescriptionLength);
+
+            b.Property(x => x.SeoKeywords)
+                .HasMaxLength(CategoryConsts.MaxSeoKeywordsLength);
+
+            // Indexes
+            b.HasIndex(x => x.CategoryId);
+            b.HasIndex(x => x.LanguageCode);
+            b.HasIndex(x => new { x.CategoryId, x.LanguageCode }).IsUnique();
         });
     }
 }
