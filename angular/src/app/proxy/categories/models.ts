@@ -17,6 +17,16 @@ export interface CategoryTranslationDto {
   seoKeywords?: string;
 }
 
+export interface CreateCategoryTranslationDto {
+  categoryId: string;
+  languageCode?: string;
+  name: string;
+  description?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string;
+}
+
 export interface CreateUpdateCategoryDto {
   name: string;
   description?: string;
@@ -28,6 +38,8 @@ export interface CreateUpdateCategoryDto {
 }
 
 export interface UpdateCategoryTranslationDto {
+  categoryId: string;
+  languageCode?: string;
   name: string;
   description?: string;
   seoTitle?: string;
