@@ -48,6 +48,10 @@
                             <button (click)="delete(category.id)" class="btn btn-danger btn-sm" title="Sil">
                                 <i class="fa fa-trash"></i>
                             </button>
+
+                            <a [routerLink]="['/category-item-language', category.id]" class="btn btn-info">
+                                Dil Ayarları
+                            </a>
                         </div>
                     </td>
                 </tr>

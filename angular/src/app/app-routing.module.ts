@@ -27,6 +27,7 @@ const routes: Routes = [
       import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
   },
   { path: 'categories', loadChildren: () => import('./categories/categories.module').then(m => m.CategoriesModule) },
+  { path: 'category-item-language', loadChildren: () => import('./category-item-language/category-item-language.module').then(m => m.CategoryItemLanguageModule) },
 ];
 
 @NgModule({
